@@ -146,6 +146,11 @@ There's some other stuff on that page too (e.g. the schedule sheet must have a
 particular name, "R68GAD_V1_00_0_EN") - generally see what additional validation
 we can do as per their requirements.
 
+#### Handle non-UK postcodes
+
+Non-UK resident donors can still have their transactions gift aided. An "X"
+should be put in the postcode column for them.
+
 #### Output directly to an ods file
 
 `openpyxl` is wonderful, but I believe it only supports .xlsx files. Is there
