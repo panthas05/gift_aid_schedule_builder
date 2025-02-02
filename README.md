@@ -2,7 +2,7 @@
 
 A script to automate the building of gift aid schedule spreadsheets, as
 specified
-(here)[https://www.gov.uk/guidance/schedule-spreadsheet-to-claim-back-tax-on-gift-aid-donations].
+[here](https://www.gov.uk/guidance/schedule-spreadsheet-to-claim-back-tax-on-gift-aid-donations).
 
 ## How it works
 
