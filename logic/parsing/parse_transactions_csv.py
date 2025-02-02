@@ -3,6 +3,7 @@
 
 from . import dates, row_parsing_exception
 from logic import key_cleaning
+import utils
 
 import csv
 from datetime import date
@@ -133,8 +134,11 @@ def parse_transactions_file() -> list[TransactionRow]:
         "..",
         "transactions.csv",
     )
+    utils.clear_then_overwrite_print("Checking transactions file...")
     _check_transactions_file(transactions_file_path)
+    utils.clear_then_overwrite_print("Transactions file passed checks")
     # parsing file contents
+    utils.clear_then_overwrite_print("Parsing transactions file...")
     transactions: list[TransactionRow] = []
     with transactions_file_path.open() as transactions_file:
         transactions_reader = csv.reader(transactions_file)
@@ -165,5 +169,6 @@ def parse_transactions_file() -> list[TransactionRow]:
                     f"{transactions_file_path.name}."
                 )
                 raise e
+    utils.clear_then_overwrite_print("Transactions file parsed...")
 
     return transactions
