@@ -7,6 +7,8 @@ import models
 
 
 def main() -> None:
+    # TODO: extend to take a flag, which specifies either "excel" or "libre", and uses
+    # the corresponding spreadsheet when generating the output.
     transaction_rows = parse_transactions_csv.parse_transactions_file()
     declarations = [
         models.DonorDeclaration.from_declaration_row(dr)
