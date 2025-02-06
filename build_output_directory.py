@@ -357,10 +357,6 @@ def _filter_gift_aidable_transactions(
     return gift_aidable_transactions
 
 
-def _to_schedule_timestamp(transaction_date: date) -> str:
-    return transaction_date.strftime("%d/%m/%y")
-
-
 def _write_transactions_to_output_workbook(
     output_workbook: openpyxl.Workbook,
     gift_aidable_transactions: list[models.GiftAidableTransaction],
