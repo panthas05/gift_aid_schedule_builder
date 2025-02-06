@@ -190,9 +190,8 @@ validate these lengths are correct as it parses the file. In practice, this will
 looks like throwing some more `DeclarationRowParsingError`s in
 `DeclarationRow.from_row` in `./logic/parsing/parse_declarations_csv.py`.
 
-There's some other stuff on that page too (e.g. the schedule sheet must have a
-particular name, "R68GAD_V1_00_0_EN") - generally see what additional validation
-we can do as per their requirements.
+Generally review the contents of the gov.uk page, and see what additional
+validation we can do, as per their requirements.
 
 #### Handle non-UK postcodes
 

@@ -112,13 +112,16 @@ def _check_output_workbook(output_workbook: openpyxl.Workbook) -> None:
             f"{worksheets_count}."
         )
 
-    # interestingly the worksheet must have the name "R68GAD_V1_00_0_EN" -
-    # validate this!
-    main_worksheet = output_workbook.active
+    main_worksheet = None
+    if "R68GAD_V1_00_0_EN" in output_workbook:
+        main_worksheet = output_workbook["R68GAD_V1_00_0_EN"]
+    elif "R68GAD_V1_00_0_CY" in output_workbook:
+        main_worksheet = output_workbook["R68GAD_V1_00_0_CY"]
+
     if main_worksheet is None:
         raise MalformedXlsxError(
-            "Workbook has no worksheets - expeced to find one with name "
-            '"R68GAD_V1_00_0_EN".'
+            "Workbook has no valid worksheets - expected to find one either with name "
+            '"R68GAD_V1_00_0_EN" or "R68GAD_V1_00_0_CY".'
         )
     earliest_donation_date_description = main_worksheet[
         _earliest_donation_date_description_cell
@@ -364,11 +367,17 @@ def _write_transactions_to_output_workbook(
 ) -> None:
     if len(gift_aidable_transactions) == 0:
         return
-    main_worksheet = output_workbook.active
+
+    main_worksheet = None
+    if "R68GAD_V1_00_0_EN" in output_workbook:
+        main_worksheet = output_workbook["R68GAD_V1_00_0_EN"]
+    elif "R68GAD_V1_00_0_CY" in output_workbook:
+        main_worksheet = output_workbook["R68GAD_V1_00_0_CY"]
+
     if main_worksheet is None:
         raise MalformedXlsxError(
-            "Workbook has no worksheets - expeced to find one with name "
-            '"R68GAD_V1_00_0_EN".'
+            "Workbook has no valid worksheets - expected to find one either with name "
+            '"R68GAD_V1_00_0_EN" or "R68GAD_V1_00_0_CY".'
         )
 
     # reporting earliest transaction date
