@@ -37,7 +37,10 @@ def _parse_boolean(boolean_string: str) -> bool:
 
 def clean_postcode(postcode: str) -> str:
     # map to upper case
-    postcode = postcode.upper()
+    postcode = postcode.upper().strip()
+    if postcode == "X":
+        # non-UK resident donors
+        return postcode
     # remove non-alphabetical characters from start
     postcode = re.sub(r"^[^A-Z]+", "", postcode)
     # remove non-alphabetical characters from end
@@ -59,6 +62,8 @@ def validate_postcode(cleaned_postcode: str) -> bool:
     Return value indicates if valid UK postcode, True meaning valid, False
     meaning invalid.
     """
+    if cleaned_postcode == "X":
+        return True
     return bool(valid_uk_postcode_regex.match(cleaned_postcode))
 
 

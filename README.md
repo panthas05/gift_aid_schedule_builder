@@ -195,11 +195,6 @@ looks like throwing some more `DeclarationRowParsingError`s in
 Generally review the contents of the gov.uk page, and see what additional
 validation we can do, as per their requirements.
 
-#### Handle non-UK postcodes
-
-Non-UK resident donors can still have their transactions gift aided. An "X"
-should be put in the postcode column for them.
-
 #### Output directly to an ods file
 
 `openpyxl` is wonderful, but I believe it only supports .xlsx files. Is there

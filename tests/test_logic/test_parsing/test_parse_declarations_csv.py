@@ -14,15 +14,19 @@ class CleanPostcodeTests(TestCase):
         self.assertEqual(
             parse_declarations_csv.clean_postcode("123ec1'?n8Q  \tx()"), "EC1N 8QX"
         )
+        self.assertEqual(parse_declarations_csv.clean_postcode("x"), "X")
 
 
 class ValidatePostcodeTests(TestCase):
 
-    def test_passes_for_legitimate_postcodes(self) -> None:
+    def test_passes_for_legitimate_UK_postcodes(self) -> None:
         self.assertTrue(parse_declarations_csv.validate_postcode("EC1N 8QX"))
         self.assertTrue(parse_declarations_csv.validate_postcode("SA18 3YF"))
         self.assertTrue(parse_declarations_csv.validate_postcode("W3 6LJ"))
         self.assertTrue(parse_declarations_csv.validate_postcode("B12 8QX"))
+
+    def test_passes_for_international_postcodes(self) -> None:
+        self.assertTrue(parse_declarations_csv.validate_postcode("X"))
 
 
 class DeclarationsCsvTestCase(TestCase):
