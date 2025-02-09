@@ -184,17 +184,6 @@ have test coverage (within reason, of course).
 
 ### Avenues for improvement
 
-#### Better validation as per gov.uk page
-
-On the gov.uk page, a length constraints are put on the "title", "first name",
-and "last name" columns. It'd be good if the `declarations.csv` parsing could
-validate these lengths are correct as it parses the file. In practice, this will
-looks like throwing some more `DeclarationRowParsingError`s in
-`DeclarationRow.from_row` in `./logic/parsing/parse_declarations_csv.py`.
-
-Generally review the contents of the gov.uk page, and see what additional
-validation we can do, as per their requirements.
-
 #### Output directly to an ods file
 
 `openpyxl` is wonderful, but I believe it only supports .xlsx files. Is there
