@@ -51,8 +51,9 @@ be able to catch all of the above transactions. This is similar to QuickBook's
 ## Getting set up
 
 Please ensure you have python 3.11+ installed (this script might work on lower
-python versions, but that's untested). I wrote the script on linux, but I think
-it should work on mac and windows too - please open an issue/PR if it doesn't.
+python versions, but that's untested). The script was written on linux, and has
+been tested on mac, but not on windows - please open an issue/PR if it
+doesn't work on your platform.
 
 If you use linux or mac, you should be able to run `./scripts/set_up.sh`, and
 it'll configure everything for you. If that script doesn't work for whatever
