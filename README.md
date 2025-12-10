@@ -169,3 +169,23 @@ readable/accessible?
 Less low hanging fruit, but probably of bigger impact - could this be rewritten
 in dart then turned into an app with flutter? Or rewritten in javascript + rust
 then turned into an app with tauri?
+
+## Disclaimer
+
+This script is a tool to make it easier to submit gift aid schedules, but it may
+make errors, and shouldn't be used blindly. After it has built a schedule,
+please undertake due dilligence to check the schedule, and verify that the
+information it holds is correct.
+
+The author of the script does not guarantee that the script is free from
+defects. The script is provided "as is", and you use it at your own risk.
+
+The author of the script makes no warantees as to performance, merchantability,
+fitness for a particular purpose, or any other warranties whether expressed or
+implied.
+
+No oral or written communication from or information provided by the author of
+the script shall create a warranty. Under no circumstances shall the author of
+the script be liable for direct, indirect, special, incidental, or consequential
+damages resulting from the use, misuse, or inability to use this software, even
+if the author of the script has been advised of the possibility of such damages.
