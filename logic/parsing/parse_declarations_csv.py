@@ -121,12 +121,44 @@ class DeclarationRow:
             row[3].strip(),
             clean_postcode(row[4]),
         ]
+
+        if len(title) > 4:
+            raise DeclarationRowParsingError(
+                1, "Title should be no longer than four characters"
+            )
         if first_name == "":
             raise DeclarationRowParsingError(2, "No first name provided.")
+        if len(first_name) > 35:
+            raise DeclarationRowParsingError(
+                2,
+                f'The first name "{first_name}" is longer than 35 characters - '
+                "please shorten it to being within the 35 character limit.",
+            )
         if last_name == "":
             raise DeclarationRowParsingError(3, "No last name provided.")
+        if len(last_name) > 35:
+            raise DeclarationRowParsingError(
+                3,
+                f'The last name "{last_name}" is longer than 35 characters - '
+                "please shorten it to being within the 35 character limit.",
+            )
+        if "-" in last_name:
+            cleaned_last_name = last_name.replace("-", " ")
+            raise DeclarationRowParsingError(
+                3,
+                "Double-barrelled last names should have a space instead of a hypen. "
+                f'Consider using "{cleaned_last_name}" instead of "{last_name}".',
+            )
+
         if house_number_or_name == "":
             raise DeclarationRowParsingError(4, "No house number (or name) provided.")
+        if len(house_number_or_name) > 40:
+            raise DeclarationRowParsingError(
+                4,
+                f'The house name "{house_number_or_name}" is longer than 40 '
+                "characters - please shorten it to being within the 40 character "
+                "limit.",
+            )
         if postcode == "":
             raise DeclarationRowParsingError(5, "No postcode provided.")
         if not validate_postcode(postcode):
@@ -257,9 +289,6 @@ def parse_declarations_file() -> list[DeclarationRow]:
     utils.clear_then_overwrite_print("Parsing declarations file...")
     declarations: list[DeclarationRow] = []
     with declarations_file_path.open() as declarations_file:
-        # TODO: implement the checks detailed here:
-        # https://www.gov.uk/guidance/schedule-spreadsheet-to-claim-back-tax-on-gift-aid-donations
-        # e.g. title only being four characters maximum
         declarations_reader = csv.reader(declarations_file)
         # skip header row
         _header_row = next(declarations_reader)

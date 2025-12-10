@@ -88,52 +88,87 @@ class ParseDeclarationsCsvTests(DeclarationsCsvTestCase):
         "Identifier",
     ]
 
+    # defaults for adding a row to the csv
+    title = "Adml"
+    first_name = "John"
+    last_name = "Hext"
+
+    house_number = "50"
+    postcode = "SA18 3QJ"
+
+    declaration_date = date(1993, 10, 8)
+    declaration_date_string = declaration_date.strftime("%d/%m/%Y")
+
+    _bool_to_string = lambda boolean: "1" if boolean else "0"
+
+    valid_four_years_before_declaration = True
+    valid_four_years_before_declaration_string = _bool_to_string(
+        valid_four_years_before_declaration
+    )
+
+    valid_day_of_declaration = False
+    valid_day_of_declaration_string = _bool_to_string(valid_day_of_declaration)
+
+    valid_after_day_of_declaration = False
+    valid_after_day_of_declaration_string = _bool_to_string(
+        valid_after_day_of_declaration
+    )
+
+    identifier = "identifier"
+
+    def _build_row(
+        self,
+        *,
+        title: str | None = None,
+        first_name: str | None = None,
+        last_name: str | None = None,
+        house_number_or_name: str | None = None,
+        postcode: str | None = None,
+        declaration_date_string: str | None = None,
+        valid_four_years_before_declaration_string: str | None = None,
+        valid_day_of_declaration_string: str | None = None,
+        valid_after_day_of_declaration_string: str | None = None,
+        identifier: str | None = None,
+    ) -> list[str]:
+        return [
+            title if title is not None else self.title,
+            first_name if first_name is not None else self.first_name,
+            last_name if last_name is not None else self.last_name,
+            (
+                house_number_or_name
+                if house_number_or_name is not None
+                else self.house_number
+            ),
+            postcode if postcode is not None else self.postcode,
+            (
+                declaration_date_string
+                if declaration_date_string is not None
+                else self.declaration_date_string
+            ),
+            (
+                valid_four_years_before_declaration_string
+                if valid_four_years_before_declaration_string is not None
+                else self.valid_four_years_before_declaration_string
+            ),
+            (
+                valid_day_of_declaration_string
+                if valid_day_of_declaration_string is not None
+                else self.valid_day_of_declaration_string
+            ),
+            (
+                valid_after_day_of_declaration_string
+                if valid_after_day_of_declaration_string is not None
+                else self.valid_after_day_of_declaration_string
+            ),
+            identifier if identifier is not None else self.identifier,
+        ]
+
     def test_parsing(self) -> None:
         # arrange
-        title = "Rear Admiral"
-        first_name = "John"
-        last_name = "Hext"
-
-        house_number = "50"
-        postcode = "SA18 3QJ"
-
-        declaration_date = date(1993, 10, 8)
-        declaration_date_string = declaration_date.strftime("%d/%m/%Y")
-
-        def bool_to_string(boolean: bool) -> str:
-            return "1" if boolean else "0"
-
-        valid_four_years_before_declaration = True
-        valid_four_years_before_declaration_string = bool_to_string(
-            valid_four_years_before_declaration
-        )
-
-        valid_day_of_declaration = False
-        valid_day_of_declaration_string = bool_to_string(valid_day_of_declaration)
-
-        valid_after_day_of_declaration = False
-        valid_after_day_of_declaration_string = bool_to_string(
-            valid_after_day_of_declaration
-        )
-
-        identifier = "identifier"
-
-        row_under_test = [
-            title,
-            first_name,
-            last_name,
-            house_number,
-            postcode,
-            declaration_date_string,
-            valid_four_years_before_declaration_string,
-            valid_day_of_declaration_string,
-            valid_after_day_of_declaration_string,
-            identifier,
-        ]
         self.create_declarations_csv_file(
             [
                 self.header_row,
-                row_under_test,
+                self._build_row(),
             ]
         )
         # act
@@ -142,22 +177,144 @@ class ParseDeclarationsCsvTests(DeclarationsCsvTestCase):
         self.assertEqual(len(declarations), 1)
         declaration = declarations[0]
         for attribute, expected_value in [
-            ("title", title),
-            ("first_name", first_name),
-            ("last_name", last_name),
-            ("house_number_or_name", house_number),
-            ("declaration_date", declaration_date),
-            ("postcode", postcode),
+            ("title", self.title),
+            ("first_name", self.first_name),
+            ("last_name", self.last_name),
+            ("house_number_or_name", self.house_number),
+            ("declaration_date", self.declaration_date),
+            ("postcode", self.postcode),
             (
                 "valid_four_years_before_declaration",
-                valid_four_years_before_declaration,
+                self.valid_four_years_before_declaration,
             ),
-            ("valid_day_of_declaration", valid_day_of_declaration),
-            ("valid_after_day_of_declaration", valid_after_day_of_declaration),
-            ("identifier", identifier),
+            ("valid_day_of_declaration", self.valid_day_of_declaration),
+            ("valid_after_day_of_declaration", self.valid_after_day_of_declaration),
+            ("identifier", self.identifier),
         ]:
             self.assertEqual(
                 getattr(declaration, attribute),
                 expected_value,
                 msg=f"Attribute was {attribute}",
             )
+
+    def _check_locator_details(
+        self,
+        exception: parse_declarations_csv.DeclarationRowParsingError,
+        column_number: int,
+    ) -> None:
+        note = exception.__notes__[0]
+        self.assertIn("row 2", note)
+        self.assertIn(f"column {column_number}", note)
+
+    def test_raises_for_too_long_title(self) -> None:
+        self.create_declarations_csv_file(
+            [
+                self.header_row,
+                self._build_row(title="Most excellent flight lieutenant"),
+            ]
+        )
+        with self.assertRaises(parse_declarations_csv.DeclarationRowParsingError) as cm:
+            declarations = parse_declarations_csv.parse_declarations_file()
+
+        exception = cm.exception
+        self._check_locator_details(exception, 1)
+        self.assertIn("Title should be no longer than four characters", str(exception))
+
+    def test_raises_for_missing_first_name(self) -> None:
+        self.create_declarations_csv_file(
+            [
+                self.header_row,
+                self._build_row(first_name=""),
+            ]
+        )
+        with self.assertRaises(parse_declarations_csv.DeclarationRowParsingError) as cm:
+            declarations = parse_declarations_csv.parse_declarations_file()
+
+        exception = cm.exception
+        self._check_locator_details(exception, 2)
+        self.assertIn("No first name provided.", str(exception))
+
+    too_long_name = "supercalifragilisticexpialidociousfred"
+
+    def test_raises_for_too_long_first_name(self) -> None:
+        self.create_declarations_csv_file(
+            [
+                self.header_row,
+                self._build_row(first_name=self.too_long_name),
+            ]
+        )
+        with self.assertRaises(parse_declarations_csv.DeclarationRowParsingError) as cm:
+            declarations = parse_declarations_csv.parse_declarations_file()
+
+        exception = cm.exception
+        self._check_locator_details(exception, 2)
+        self.assertIn(self.too_long_name, str(exception))
+        self.assertIn("longer than 35 characters", str(exception))
+
+    def test_raises_for_missing_last_name(self) -> None:
+        self.create_declarations_csv_file(
+            [
+                self.header_row,
+                self._build_row(last_name=""),
+            ]
+        )
+        with self.assertRaises(parse_declarations_csv.DeclarationRowParsingError) as cm:
+            declarations = parse_declarations_csv.parse_declarations_file()
+
+        exception = cm.exception
+        self._check_locator_details(exception, 3)
+        self.assertIn("No last name provided.", str(exception))
+
+    def test_raises_for_too_long_last_name(self) -> None:
+        self.create_declarations_csv_file(
+            [
+                self.header_row,
+                self._build_row(last_name=self.too_long_name),
+            ]
+        )
+        with self.assertRaises(parse_declarations_csv.DeclarationRowParsingError) as cm:
+            declarations = parse_declarations_csv.parse_declarations_file()
+
+        exception = cm.exception
+        self._check_locator_details(exception, 3)
+        self.assertIn(self.too_long_name, str(exception))
+        self.assertIn("longer than 35 characters", str(exception))
+
+    def test_raises_for_double_barrelled_last_name(self) -> None:
+        double_barrelled_last_name = "foo-bar"
+        self.create_declarations_csv_file(
+            [
+                self.header_row,
+                self._build_row(last_name=double_barrelled_last_name),
+            ]
+        )
+        with self.assertRaises(parse_declarations_csv.DeclarationRowParsingError) as cm:
+            declarations = parse_declarations_csv.parse_declarations_file()
+
+        exception = cm.exception
+        self._check_locator_details(exception, 3)
+        self.assertIn(double_barrelled_last_name, str(exception))
+        self.assertIn("foo bar", str(exception))
+        self.assertIn(
+            "Double-barrelled last names should have a space instead of a hypen",
+            str(exception),
+        )
+
+    def test_raises_for_too_long_house_name(self) -> None:
+        too_long_house_name = "Buckingham Palace Buckingham Palace Buckingham Palace"
+        self.create_declarations_csv_file(
+            [
+                self.header_row,
+                self._build_row(house_number_or_name=too_long_house_name),
+            ]
+        )
+        with self.assertRaises(parse_declarations_csv.DeclarationRowParsingError) as cm:
+            declarations = parse_declarations_csv.parse_declarations_file()
+
+        exception = cm.exception
+        self._check_locator_details(exception, 4)
+        self.assertIn(too_long_house_name, str(exception))
+        self.assertIn(
+            "longer than 40 characters",
+            str(exception),
+        )
