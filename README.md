@@ -108,6 +108,11 @@ columns has anything other than a "0" or a "1" in it).
 Finally, once you've finished setting up your csvs, run `python3
 gift_aid_schedule_builder.py`, and let the script do its magic!
 
+Do note, gift aid schedules can only hold a maxiumum of 1000 transactions. The
+script will warn you if you hit this limit, in which case you'll need to delete
+some of the rows from `transactions.csv` (the script will tell you which), and
+run the script again to generate another schedule.
+
 ### After the script has run
 
 Each time the script runs, it creates a new folder inside the `outputs/` folder.
