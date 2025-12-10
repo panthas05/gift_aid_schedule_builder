@@ -374,11 +374,14 @@ def _write_transactions_to_output_workbook(
             "Workbook has no worksheets - expeced to find one with name "
             '"R68GAD_V1_00_0_EN".'
         )
+
     # reporting earliest transaction date
     first_transaction_date = gift_aidable_transactions[0].transaction_date
-    main_worksheet[_earliest_donation_date_input_cell].value = _to_schedule_timestamp(
-        first_transaction_date
+    main_worksheet[_earliest_donation_date_input_cell].number_format = (
+        openpyxl.styles.numbers.FORMAT_DATE_DDMMYY
     )
+    main_worksheet[_earliest_donation_date_input_cell].value = first_transaction_date
+
     # writing rows
     for row_index, transaction in enumerate(
         gift_aidable_transactions,
@@ -392,9 +395,10 @@ def _write_transactions_to_output_workbook(
             main_worksheet[f"F{row_index}"].value = declaration.house_name_or_number
             main_worksheet[f"G{row_index}"].value = declaration.postcode
 
-        main_worksheet[f"J{row_index}"].value = _to_schedule_timestamp(
-            transaction.transaction_date
+        main_worksheet[f"J{row_index}"].number_format = (
+            openpyxl.styles.numbers.FORMAT_DATE_DDMMYY
         )
+        main_worksheet[f"J{row_index}"].value = transaction.transaction_date
 
         main_worksheet[f"K{row_index}"].value = transaction.amount
         main_worksheet[f"K{row_index}"].number_format = "#,##0.00"
