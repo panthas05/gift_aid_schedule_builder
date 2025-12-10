@@ -182,15 +182,6 @@ have test coverage (within reason, of course).
 
 ### Avenues for improvement
 
-#### Add option of using excel spreadsheet
-
-I used the libreoffice spreadsheet from the gov.uk website because I don't have
-excel, but it'd be good if it could write to either spreadsheet depending on
-what the user wanted. I guess we'd want to tweak the script to take a flag,
-something like `python3 gift_aid_schedule_builder.py --output=excel`, which the
-user could use to specify the output they want. It should probably default to
-excel if not provided - I guess excel is more popular than libreoffice?
-
 #### Better validation as per gov.uk page
 
 On the gov.uk page, a length constraints are put on the "title", "first name",
