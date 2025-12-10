@@ -1,6 +1,3 @@
-# gift_aid_schedule_builder, a script for building gift aid schedules for UK-based
-# charities - Copyright (C) 2024  Peter Thomas
-
 import arguments
 import models
 from logic.parsing import parse_transactions_csv

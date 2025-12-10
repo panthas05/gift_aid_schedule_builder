@@ -3,6 +3,8 @@
 A script to automate the building of gift aid schedule spreadsheets, as
 specified
 [here](https://www.gov.uk/guidance/schedule-spreadsheet-to-claim-back-tax-on-gift-aid-donations).
+The author hopes that the script will be of use to those involved in UK-based
+charities.
 
 With kudos to Jenni, whose
 [guide](https://www.girlguidingleicestershire.org/wp-content/uploads/gift-aid-1st-paxton.pdf)
@@ -236,3 +238,12 @@ the script shall create a warranty. Under no circumstances shall the author of
 the script be liable for direct, indirect, special, incidental, or consequential
 damages resulting from the use, misuse, or inability to use this software, even
 if the author of the script has been advised of the possibility of such damages.
+
+## License
+
+This script is distributed under a GPLv3 license, with the commons clause (see
+`LICENSE.md`). At the end of the day, I don't want this script to be put behind
+some paywall when folks can run it themselves for free. Assuming it's of some
+use, I could see it having a greater impact in benefitting UK-based charities if
+it were incorporated into some wider financial services suite. If this is your
+situation as you look at the code, please get in touch with me.
