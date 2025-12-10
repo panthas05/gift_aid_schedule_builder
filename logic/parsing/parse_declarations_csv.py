@@ -3,6 +3,7 @@
 
 from . import dates, row_parsing_exception
 from logic import key_cleaning
+import utils
 
 import csv
 from datetime import date
@@ -247,8 +248,11 @@ def parse_declarations_file() -> list[DeclarationRow]:
         "..",
         "declarations.csv",
     )
+    utils.clear_then_overwrite_print("Checking declarations file...")
     _check_declarations_file(declarations_file_path)
+    utils.clear_then_overwrite_print("Declarations file passed checks")
     # parsing file contents
+    utils.clear_then_overwrite_print("Parsing declarations file...")
     declarations: list[DeclarationRow] = []
     with declarations_file_path.open() as declarations_file:
         declarations_reader = csv.reader(declarations_file)
@@ -276,4 +280,5 @@ def parse_declarations_file() -> list[DeclarationRow]:
                 )
                 raise e
 
+    utils.clear_then_overwrite_print("Declarations file parsed...")
     return declarations

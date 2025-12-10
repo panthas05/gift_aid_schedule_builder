@@ -3,6 +3,7 @@
 
 import models
 from logic.parsing import parse_transactions_csv
+import utils
 
 from datetime import date
 import enum
@@ -404,6 +405,7 @@ def build_output_directory(
     transaction_rows: list[parse_transactions_csv.TransactionRow],
     declarations: list[models.DonorDeclaration],
 ) -> None:
+    utils.clear_then_overwrite_print("Building and checking output file...")
     output_file_path = _create_output_file()
 
     output_workbook = openpyxl.load_workbook(
@@ -412,19 +414,28 @@ def build_output_directory(
         rich_text=True,
     )
     _check_output_workbook(output_workbook)
+    utils.clear_then_overwrite_print("Output file built")
 
+    utils.clear_then_overwrite_print(
+        "Finding gift-aidable transactions in transactions.csv..."
+    )
     gift_aidable_transactions = _filter_gift_aidable_transactions(
         transaction_rows,
         declarations,
+    )
+    utils.clear_then_overwrite_print(
+        "Writing gift-aidable transactions to output file..."
     )
     _write_transactions_to_output_workbook(
         output_workbook,
         gift_aidable_transactions,
         output_file_path,
     )
+    utils.clear_then_overwrite_print("Output file written")
 
     # finally, copying in transactions csv and declarations csv for ease of
     # auditability/reviewing what the script did
+    utils.clear_then_overwrite_print("Copying ancillary files to output directory")
     output_directory = _get_output_directory()
     for file_name in ["transactions.csv", "declarations.csv"]:
         shutil.copy(
@@ -434,3 +445,23 @@ def build_output_directory(
             ),
             output_directory.joinpath(file_name),
         )
+
+    # clearing whatever was last written to the terminal
+    utils.clear_then_overwrite_print("")
+    output_directory_files = [
+        "A completed gift aid schedule (gift_aid_schedule__libre_.xlsx)",
+        "A list of transactions that may be gift aidable, but require attention (transactions_that_need_manual_handling.txt)",
+        "A log, detailing what was done with each row of transactions.csv (transactions_log.txt)",
+        "A copy of transactions.csv",
+        "A copy of declarations.csv",
+    ]
+    output_directory_files_summary = "".join(
+        f"\n\t- {odf}" for odf in output_directory_files
+    )
+    print(
+        f"Done. Files written to:\n{output_directory.absolute()}\nPlease find within "
+        f"that folder:{output_directory_files_summary}\nAfter you've checked that the "
+        "schedule looks okay, and resolved any transactions listed in "
+        "transactions_that_need_manual_handling.txt, you can upload the schedule to "
+        "make a gift aid claim here: https://www.gov.uk/claim-gift-aid-online"
+    )
