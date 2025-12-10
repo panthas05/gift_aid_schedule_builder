@@ -140,21 +140,3 @@ class DetermineWhetherTransactionGiftAidableForDeclarationTests(TestCase):
         self.assertEqual(
             result, build_output_directory.TransactionEligability.IS_GIFT_AIDABLE
         )
-
-
-class LogNonGiftAidableTransactionThatHasDeclaration(TestCase):
-
-    def test_more_than_four_years_before_declaration(self) -> None:
-        pass
-
-    def test_less_than_four_years_before_declaration(self) -> None:
-        pass
-
-    def test_day_of_declaration(self) -> None:
-        pass
-
-    def test_after_day_of_declaration(self) -> None:
-        pass
-
-    def test_raises_for_unexpected_eligability(self) -> None:
-        pass
