@@ -62,6 +62,8 @@ an edge case when ISO-8601 is inappropriate. ;) Please ensure too that the csv
 files have UTF-8 encoding (I believe you can specify this during the "Save as"
 stage in both excel and libreoffice).
 
+### Setting up and running the script
+
 Populate `transactions.csv` with transactions from your bank that you want to
 process into a gift aid schedule (you can probably export a csv from your online
 banking and rework it so it only has columns "Date", "Reference", and "Amount").
@@ -106,8 +108,49 @@ columns has anything other than a "0" or a "1" in it).
 Finally, once you've finished setting up your csvs, run `python3
 gift_aid_schedule_builder.py`, and let the script do its magic!
 
-TODO: flesh out more - talk about the contents of the directory it creates + the
-need to save the file as an ods file 
+### After the script has run
+
+Each time the script runs, it creates a new folder inside the `outputs/` folder.
+That new folder will hold five different files:
+ - A completed gift aid schedule (`gift_aid_schedule__libre_.xlsx`)
+ - A list of transactions that may be gift aidable, but require attention
+   (`transactions_that_need_manual_handling.txt`)
+ - A log, detailing what was done with each row of transactions.csv
+   (`transactions_log.txt`)
+ - A copy of `transactions.csv`
+ - A copy of `declarations.csv`
+
+The last three are simply for auditing purposes - if you want to examine what
+the script did with each row and its reasons for doing so, you can check the
+contents of `transactions_log.txt`. Copies of `transactions.csv` and
+`declarations.csv` are made for posterity (as you'll be entering new
+transactions to `transactions.csv` the next time you run the script).
+
+There are some situations where the script won't be able to determine which
+donor a transaction came from. Consider a transaction with reference "FP Hannah
+Jane Doe". Say you had two donors, one with identifier "FP Hannah Jane", and
+another with identifier "Jane Doe". Both identifiers would match the
+transaction, and so the script would know that the transaction was gift aidable,
+but wouldn't know which donor to assign to the transaction. When this happens,
+the script will still write a row in the schedule for the transaction, but won't
+provide any donor details on the row - only the amount. It will also leave a
+note in `transactions_that_need_manual_handling.txt`, indicating which row of
+the gift aid schedule needs attention, the possible donors that the donation
+could have been from, and the original row of the transaction in
+`transactions.csv`. You'll need to manually resolve such ambiguities before you
+submit the schedule.
+
+Finally, the star of the show, `gift_aid_schedule__libre_.xlsx`. This is the
+schedule itself, which you'll upload to the HMRC government gateway. You'll need
+to open this file in excel/libreoffice and save it as an `.ods` file before you
+upload it. *Please check the transactions that the script writes to the
+schedule.* In matching by reference, it may erroneously pick up transactions
+that aren't gift aidable (for example, a gift-aid donor making a donation on
+behalf of someone else - find some other exceptions
+[here](https://www.gov.uk/guidance/gift-aid-what-donations-charities-and-cascs-can-claim-on#when-you-cannot-claim-gift-aid)).
+Please remove any of these from the schedule before submitting it. The author of
+the script provides no guarantee that the script will only pick out legitimately
+gift-aidable transactions (see disclaimer below).
 
 ## Doing development
 
