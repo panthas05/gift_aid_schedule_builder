@@ -184,6 +184,12 @@ have test coverage (within reason, of course).
 
 ### Avenues for improvement
 
+#### Automatically clean csv files
+
+We can truncate `delarations.csv` to having only 10 columns, and
+`transactions.csv` to having only 3. Doing so could save an end user some
+effort, as trailing commas aren't always obvious in excel/libreoffice.
+
 #### Output directly to an ods file
 
 `openpyxl` is wonderful, but I believe it only supports .xlsx files. Is there
