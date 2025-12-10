@@ -36,6 +36,25 @@ class DeclarationsCsvTestCase(TestCase):
         "..",
         "declarations.csv",
     )
+    # If there's already a file entitled "declarations.csv" in the project root
+    # directory, relocate to "temp-declarations.csv", then move back to
+    # "declarations.csv" after (so our tests don't go deleting the user's
+    # files!) Speaking from painful experience :P
+    declarations_temp_file_path = declarations_file_path.parent.joinpath(
+        "temp-declarations.csv"
+    )
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        super().setUpClass()
+        if cls.declarations_file_path.exists():
+            cls.declarations_file_path.rename(cls.declarations_temp_file_path)
+
+    @classmethod
+    def tearDownClass(cls) -> None:
+        super().setUpClass()
+        if cls.declarations_temp_file_path.exists():
+            cls.declarations_temp_file_path.rename(cls.declarations_file_path)
 
     def create_declarations_csv_file(self, content: list[list[str]]) -> None:
         self.delete_declarations_csv_file()

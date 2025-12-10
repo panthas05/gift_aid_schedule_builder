@@ -168,6 +168,22 @@ class TransactionsCsvTestCase(TestCase):
         "..",
         "transactions.csv",
     )
+    # See comment on DeclarationsCsvTestCase
+    transactions_temp_file_path = transactions_file_path.parent.joinpath(
+        "temp-transactions.csv"
+    )
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        super().setUpClass()
+        if cls.transactions_file_path.exists():
+            cls.transactions_file_path.rename(cls.transactions_temp_file_path)
+
+    @classmethod
+    def tearDownClass(cls) -> None:
+        super().setUpClass()
+        if cls.transactions_temp_file_path.exists():
+            cls.transactions_temp_file_path.rename(cls.transactions_file_path)
 
     def create_transactions_csv_file(self, content: list[list[str]]) -> None:
         self.delete_transactions_csv_file()
