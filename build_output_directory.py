@@ -1,6 +1,7 @@
 # gift_aid_schedule_builder, a script for building gift aid schedules for UK-based
 # charities - Copyright (C) 2024  Peter Thomas
 
+import arguments
 import models
 from logic.parsing import parse_transactions_csv
 import utils
@@ -12,8 +13,20 @@ import openpyxl
 import pathlib
 import re
 import shutil
-from typing import TextIO
+from typing import assert_never, TextIO
 import warnings
+
+
+def _get_file_name_from_spreadsheet_type(
+    spreadsheet_type: arguments.SpreadsheetType,
+) -> str:
+    if spreadsheet_type == arguments.SpreadsheetType.EXCEL:
+        return "Gift-Aid-Schedule-Excel.xlsx"
+    elif spreadsheet_type == arguments.SpreadsheetType.LIBRE:
+        return "gift_aid_schedule__libre_.xlsx"
+    else:
+        assert_never(spreadsheet_type)
+
 
 _output_file_name_regex = re.compile(r"output_\d{4}-\d{2}-\d{2}_\((\d+)\)")
 
@@ -67,10 +80,11 @@ def _get_output_directory() -> pathlib.Path:
     return _output_directory
 
 
-def _create_output_file() -> pathlib.Path:
-    original_template_path = pathlib.Path("templates", "gift_aid_schedule__libre_.xlsx")
+def _create_output_file(spreadsheet_type: arguments.SpreadsheetType) -> pathlib.Path:
+    spreadsheet_name = _get_file_name_from_spreadsheet_type(spreadsheet_type)
+    original_template_path = pathlib.Path("templates", spreadsheet_name)
     output_directory = _get_output_directory()
-    output_file_path = output_directory.joinpath("gift_aid_schedule__libre_.xlsx")
+    output_file_path = output_directory.joinpath(spreadsheet_name)
     shutil.copy(
         original_template_path,
         output_file_path,
@@ -413,9 +427,10 @@ def _write_transactions_to_output_workbook(
 def build_output_directory(
     transaction_rows: list[parse_transactions_csv.TransactionRow],
     declarations: list[models.DonorDeclaration],
+    spreadsheet_type: arguments.SpreadsheetType,
 ) -> None:
     utils.clear_then_overwrite_print("Building and checking output file...")
-    output_file_path = _create_output_file()
+    output_file_path = _create_output_file(spreadsheet_type)
 
     output_workbook = openpyxl.load_workbook(
         output_file_path.resolve(),
@@ -457,8 +472,9 @@ def build_output_directory(
 
     # clearing whatever was last written to the terminal
     utils.clear_then_overwrite_print("")
+    spreadsheet_name = _get_file_name_from_spreadsheet_type(spreadsheet_type)
     output_directory_files = [
-        "A completed gift aid schedule (gift_aid_schedule__libre_.xlsx)",
+        f"A completed gift aid schedule ({spreadsheet_name})",
         "A list of transactions that may be gift aidable, but require attention (transactions_that_need_manual_handling.txt)",
         "A log, detailing what was done with each row of transactions.csv (transactions_log.txt)",
         "A copy of transactions.csv",
