@@ -4,6 +4,11 @@ A script to automate the building of gift aid schedule spreadsheets, as
 specified
 [here](https://www.gov.uk/guidance/schedule-spreadsheet-to-claim-back-tax-on-gift-aid-donations).
 
+With kudos to Jenni, whose
+[guide](https://www.girlguidingleicestershire.org/wp-content/uploads/gift-aid-1st-paxton.pdf)
+was very helpful for clarifying certain facets of the gift aid schedule. Her
+guide may prove to be a helpful document to have handy alongside this readme.
+
 ## How it works
 
 The idea of this script is that you drop a bunch of bank transactions into this
