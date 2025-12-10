@@ -9,6 +9,10 @@ With kudos to Jenni, whose
 was very helpful for clarifying certain facets of the gift aid schedule. Her
 guide may prove to be a helpful document to have handy alongside this readme.
 
+The Church of England also provides a
+[guide](https://www.churchofengland.org/sites/default/files/2020-10/Claiming-Online-December-2019.pdf)
+to making gift aid claims, which may also be helpful to peruse.
+
 ## How it works
 
 The idea of this script is that you drop a bunch of bank transactions into this
