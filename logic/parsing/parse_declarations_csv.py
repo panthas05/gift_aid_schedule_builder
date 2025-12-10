@@ -255,6 +255,9 @@ def parse_declarations_file() -> list[DeclarationRow]:
     utils.clear_then_overwrite_print("Parsing declarations file...")
     declarations: list[DeclarationRow] = []
     with declarations_file_path.open() as declarations_file:
+        # TODO: implement the checks detailed here:
+        # https://www.gov.uk/guidance/schedule-spreadsheet-to-claim-back-tax-on-gift-aid-donations
+        # e.g. title only being four characters maximum
         declarations_reader = csv.reader(declarations_file)
         # skip header row
         _header_row = next(declarations_reader)
