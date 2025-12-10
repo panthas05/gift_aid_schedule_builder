@@ -1,0 +1,14 @@
+env/
+dev_files/
+
+# ignoring input files
+/*.csv
+/*.ods
+/*.xlsx
+# ignoring output files (that the script produces) 
+outputs/*
+
+.~lock*
+__pycache__
+.pyc
+.mypy_cache
