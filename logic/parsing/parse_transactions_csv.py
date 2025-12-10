@@ -1,15 +1,14 @@
-from . import dates, row_parsing_exception
-from logic import key_cleaning
-import utils
-
 import csv
+import os
+import pathlib
+import re
 from datetime import date
 from decimal import Decimal, InvalidOperation
-import pathlib
-import os
-import re
-import sys
-from typing import Any
+
+import utils
+from logic import key_cleaning
+
+from . import dates, row_parsing_exception
 
 
 class TransactionRowParsingError(row_parsing_exception.RowParsingError):
@@ -34,7 +33,6 @@ def _parse_transaction_amount(amount_string: str) -> Decimal | None:
 
 
 class TransactionRow:
-
     def __init__(
         self,
         transaction_date: date,
@@ -140,7 +138,7 @@ def parse_transactions_file() -> list[TransactionRow]:
     with transactions_file_path.open() as transactions_file:
         transactions_reader = csv.reader(transactions_file)
         # skip header row
-        _header_row = next(transactions_reader)
+        _ = next(transactions_reader)
 
         for row_index, row in enumerate(transactions_reader, 2):
             if (row_length := len(row)) != 3:

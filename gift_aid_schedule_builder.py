@@ -14,11 +14,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import build_output_directory
-from logic.parsing import parse_transactions_csv, parse_declarations_csv
-import models
-import arguments
+
 import sys
+
+import arguments
+import build_output_directory
+import models
+from logic.parsing import parse_declarations_csv, parse_transactions_csv
 
 
 def main(spreadsheet_type: arguments.SpreadsheetType) -> None:

@@ -1,15 +1,12 @@
-from . import dates, row_parsing_exception
-from logic import key_cleaning
+import csv
+import os
+import pathlib
+import re
+from datetime import date
+
 import utils
 
-import csv
-from datetime import date
-from decimal import Decimal, InvalidOperation
-import pathlib
-import os
-import re
-import sys
-import typing
+from . import dates, row_parsing_exception
 
 
 class DeclarationRowParsingError(row_parsing_exception.RowParsingError):
@@ -68,7 +65,6 @@ def validate_postcode(cleaned_postcode: str) -> bool:
 
 
 class DeclarationRow:
-
     def __init__(
         self,
         title: str,
@@ -291,7 +287,7 @@ def parse_declarations_file() -> list[DeclarationRow]:
     with declarations_file_path.open() as declarations_file:
         declarations_reader = csv.reader(declarations_file)
         # skip header row
-        _header_row = next(declarations_reader)
+        _ = next(declarations_reader)
 
         for row_index, row in enumerate(declarations_reader, 2):
             if (row_length := len(row)) != 10:

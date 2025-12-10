@@ -31,7 +31,6 @@ _spreadsheet_type_argument_regex = re.compile(r"--output=(\w+)")
 
 
 def parse_arguments(arguments: list[str]) -> SpreadsheetType:
-    spreadsheet_type: SpreadsheetType | None = None
     for argument in arguments:
         if match := _spreadsheet_type_argument_regex.match(argument):
             return _parse_spreadsheet_type(match.group(1))
